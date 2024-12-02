@@ -5,18 +5,34 @@ import utils.{sample, live}
 
 import scala.util.chaining.*
 
-def parse_pair(inp: String): (Int, Int) =
-  inp match
-    case s"$l   $r" => l.toInt -> r.toInt
+def safeDecrease(l: Int, r: Int): Boolean =
+  val d = l - r
+  d > 0 && d <= 3
 
-def part1(input: String): String =
-  "not done"
+def safeIncrease(l: Int, r: Int): Boolean =
+  val d = l - r
+  d < 0 && d >= -3
 
-def part2(input: String): String =
-  "not done"
+def safeReport(report: List[Int]): Boolean =
+  val pairs = report.zip(report.tail)
+  (pairs.foldRight(true) { case ((l, r), cur) => safeIncrease(l, r) && cur }
+  || pairs.foldRight(true) { case ((l, r), cur) => safeDecrease(l, r) && cur })
+
+def omitEachElement[T](ts: List[T]): List[List[T]] =
+  ts.indices.map(i => ts.patch(i, Nil, 1)).toList
+
+def checkReportSerie(rs: List[List[Int]]): Boolean =
+  rs match
+    case head :: next => safeReport(head) || checkReportSerie(next)
+    case Nil          => false
+
+def safeReportWithDampener(report: List[Int]): Boolean =
+  safeReport(report) || checkReportSerie(omitEachElement(report))
 
 @main def part1: Unit =
-  println(s"The solution is ${part1("day02".sample)}")
+  val reports = "day02".live.split("\n").map(_.split(" ").map(_.toInt).toList)
+  println(reports.count(safeReport))
 
 @main def part2: Unit =
-  println(s"The solution is ${part2("day02".sample)}")
+  val reports = "day02".live.split("\n").map(_.split(" ").map(_.toInt).toList)
+  reports.count(safeReportWithDampener) pipe println
