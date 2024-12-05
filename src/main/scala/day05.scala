@@ -1,5 +1,5 @@
 package aoc
-package day052
+package day05
 
 import utils.{sample, live}
 
