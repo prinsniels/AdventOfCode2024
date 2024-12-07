@@ -19,18 +19,19 @@ object T:
 enum Opp:
   case *, +, |
 
-def process(l: Long, r: Long, opp: Opp): Long =
-  opp match
-    case Opp.* => l * r
-    case Opp.+ => l + r
-    case Opp.| => (l.toString + r.toString).toLong
+extension (o: Opp)
+  def eval(l: Long, r: Long): Long =
+    o match
+      case Opp.* => l * r
+      case Opp.+ => l + r
+      case Opp.| => (l.toString + r.toString).toLong
 
 def validate(goal: Long, seq: List[Long], ops: List[Opp], cur: Long, baseOpps: List[Opp]): Boolean =
   seq match
     case h1 :: n1 =>
       ops match
         case h2 :: n2 =>
-          val pro = process(cur, h1, h2)
+          val pro = h2.eval(cur, h1)
           ((pro <= goal && validate(goal, n1, baseOpps, pro, baseOpps))
           || validate(goal, seq, n2, cur, baseOpps))
         case Nil => false
