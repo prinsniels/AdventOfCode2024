@@ -32,15 +32,19 @@ def run(line: List[Bag], c: Int): List[Bag] =
   if (c <= 0) line
   else run(step(line), c - 1)
 
+val base = List(
+  Bag(1950139, 1),
+  Bag(0, 1),
+  Bag(3, 1),
+  Bag(837, 1),
+  Bag(6116, 1),
+  Bag(18472, 1),
+  Bag(228700, 1),
+  Bag(45, 1)
+)
+
 @main def part1: Unit =
-  val line = List(
-    Bag(1950139, 1),
-    Bag(0, 1),
-    Bag(3, 1),
-    Bag(837, 1),
-    Bag(6116, 1),
-    Bag(18472, 1),
-    Bag(228700, 1),
-    Bag(45, 1)
-  )
-  run(line, 75).map(_.cnt).sum pipe println
+  run(base, 25).map(_.cnt).sum pipe println
+
+@main def part2: Unit =
+  run(base, 75).map(_.cnt).sum pipe println
